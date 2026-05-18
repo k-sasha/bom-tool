@@ -26,6 +26,8 @@
             max-width: 700px;
             padding: 20px;
             z-index: 10;
+            font-size: 32px;
+            line-height: 1.25;
         }
 
         #cat-container {
@@ -85,6 +87,26 @@
             padding: 20px;
             max-width: 700px;
         }
+
+        @media (max-width: 768px) {
+
+            h1 {
+                font-size: 24px;
+                padding: 16px;
+            }
+
+            #cat-container {
+                width: 180px;
+                height: 180px;
+                top: 10px;
+                right: 10px;
+            }
+
+            button {
+                padding: 14px 28px;
+                font-size: 18px;
+            }
+        }
     </style>
 </head>
 
@@ -95,7 +117,7 @@
     </h1>
 
     <div id="cat-container">
-        <img id="cat-img" src="start.jpg" alt="Cat">
+        <img id="cat-img" src="start.jpg.jpg" alt="Cat">
     </div>
 
     <div class="btn-group" id="controls">
@@ -114,28 +136,24 @@
         const message = document.getElementById('message');
         const controls = document.getElementById('controls');
 
-        // 3 стадии грусти
         const sadCats = [
-            "sad1.jpg",
-            "sad2.jpg",
-            "sad3.jpg"
+            "sad1.jpg.jpeg",
+            "sad2.jpg.jpg",
+            "sad3.jpg.jpg"
         ];
 
-        // 3 стадии плача
         const cryingCats = [
-            "cry1.jpg",
-            "cry2.jpg",
-            "cry3.jpg"
+            "cry1.jpg.jpeg",
+            "cry2.jpg.jpeg",
+            "cry3.jpg.jpeg"
         ];
 
-        // довольный кот после YES
-        const happyCat = "happy.jpg";
+        const happyCat = "happy.jpg.jpeg";
 
         let sadStep = 0;
         let cryStep = 0;
         let yesScale = 1;
 
-        // Каждые 3 сек кот становится грустнее
         const timer = setInterval(() => {
 
             if (sadStep < sadCats.length) {
@@ -155,26 +173,22 @@
 
         }, 3000);
 
-        // Убегающая кнопка NO
         const moveNo = (e) => {
 
             if (e) e.preventDefault();
 
             noBtn.style.position = 'fixed';
 
-            const x = Math.random() * (window.innerWidth - 120);
-            const y = Math.random() * (window.innerHeight - 70);
+            const x = Math.random() * (window.innerWidth - 140);
+            const y = Math.random() * (window.innerHeight - 90);
 
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
 
-            // YES становится больше
             yesScale += 0.35;
 
             yesBtn.style.transform = `scale(${yesScale})`;
 
-            // При попытке нажать NO:
-            // переключаем плачущие картинки
             if (cryStep < cryingCats.length - 1) {
                 cryStep++;
             }
@@ -193,7 +207,6 @@
         noBtn.addEventListener('mouseover', moveNo);
         noBtn.addEventListener('touchstart', moveNo);
 
-        // YES
         yesBtn.addEventListener('click', () => {
 
             clearInterval(timer);
