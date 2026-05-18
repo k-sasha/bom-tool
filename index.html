@@ -30,13 +30,33 @@
             line-height: 1.25;
         }
 
-        #cat-container {
+        #cat-area {
             position: fixed;
             top: 20px;
             right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 5;
+        }
+
+        #cat-message {
+            display: none;
+            max-width: 220px;
+            background: white;
+            color: #1a1a1a;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.25;
+            padding: 14px 18px;
+            border-radius: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+
+        #cat-container {
             width: 240px;
             height: 240px;
-            z-index: 5;
         }
 
         #cat-img {
@@ -89,17 +109,27 @@
         }
 
         @media (max-width: 768px) {
-
             h1 {
                 font-size: 24px;
                 padding: 16px;
             }
 
-            #cat-container {
-                width: 180px;
-                height: 180px;
+            #cat-area {
                 top: 10px;
                 right: 10px;
+                gap: 8px;
+            }
+
+            #cat-message {
+                max-width: 140px;
+                font-size: 13px;
+                padding: 10px 12px;
+                border-radius: 14px;
+            }
+
+            #cat-container {
+                width: 160px;
+                height: 160px;
             }
 
             button {
@@ -116,8 +146,14 @@
         Are you willing to use a BOM template that helps avoid manual errors, keeps formatting consistent, and saves time?
     </h1>
 
-    <div id="cat-container">
-        <img id="cat-img" src="start.jpg.jpg" alt="Cat">
+    <div id="cat-area">
+        <div id="cat-message">
+            Don't upset the cat.<br>Don't make him wait.
+        </div>
+
+        <div id="cat-container">
+            <img id="cat-img" src="start.jpg.jpg" alt="Cat">
+        </div>
     </div>
 
     <div class="btn-group" id="controls">
@@ -128,21 +164,19 @@
     <div id="message" class="success-text"></div>
 
     <script>
-
         const yesBtn = document.getElementById('yesBtn');
         const noBtn = document.getElementById('noBtn');
         const catImg = document.getElementById('cat-img');
+        const catMessage = document.getElementById('cat-message');
         const question = document.getElementById('question');
         const message = document.getElementById('message');
         const controls = document.getElementById('controls');
+        const catArea = document.getElementById('cat-area');
 
-        const sadCats = [
+        const catSequence = [
             "sad1.jpg.jpeg",
             "sad2.jpg.jpg",
-            "sad3.jpg.jpg"
-        ];
-
-        const cryingCats = [
+            "sad3.jpg.jpg",
             "cry1.jpg.jpeg",
             "cry2.jpg.jpeg",
             "cry3.jpg.jpeg"
@@ -150,31 +184,29 @@
 
         const happyCat = "happy.jpg.jpeg";
 
-        let sadStep = 0;
-        let cryStep = 0;
+        let catStep = 0;
         let yesScale = 1;
 
+        function changeCat() {
+            catImg.style.opacity = 0;
+
+            setTimeout(() => {
+                catImg.src = catSequence[catStep];
+                catImg.style.opacity = 1;
+
+                catStep = (catStep + 1) % catSequence.length;
+            }, 200);
+        }
+
         const timer = setInterval(() => {
-
-            if (sadStep < sadCats.length) {
-
-                catImg.style.opacity = 0;
-
-                setTimeout(() => {
-
-                    catImg.src = sadCats[sadStep];
-
-                    catImg.style.opacity = 1;
-
-                    sadStep++;
-
-                }, 200);
+            if (catMessage.style.display !== 'block') {
+                catMessage.style.display = 'block';
             }
 
+            changeCat();
         }, 3000);
 
         const moveNo = (e) => {
-
             if (e) e.preventDefault();
 
             noBtn.style.position = 'fixed';
@@ -186,29 +218,13 @@
             noBtn.style.top = y + 'px';
 
             yesScale += 0.35;
-
             yesBtn.style.transform = `scale(${yesScale})`;
-
-            if (cryStep < cryingCats.length - 1) {
-                cryStep++;
-            }
-
-            catImg.style.opacity = 0;
-
-            setTimeout(() => {
-
-                catImg.src = cryingCats[cryStep];
-
-                catImg.style.opacity = 1;
-
-            }, 150);
         };
 
         noBtn.addEventListener('mouseover', moveNo);
         noBtn.addEventListener('touchstart', moveNo);
 
         yesBtn.addEventListener('click', () => {
-
             clearInterval(timer);
 
             confetti({
@@ -218,11 +234,13 @@
 
             question.style.display = 'none';
             controls.style.display = 'none';
+            catMessage.style.display = 'none';
 
             catImg.src = happyCat;
 
-            catImg.parentElement.style.position = "static";
-            catImg.parentElement.style.margin = "20px auto";
+            catArea.style.position = "static";
+            catArea.style.margin = "20px auto";
+            catArea.style.justifyContent = "center";
 
             message.innerHTML =
                 "See? You just couldn't say no to efficiency 😉<br><br>I knew you'd make the right choice.";
@@ -231,7 +249,6 @@
 
             document.body.style.backgroundColor = "#e8f5e9";
         });
-
     </script>
 
 </body>
